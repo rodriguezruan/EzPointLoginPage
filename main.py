@@ -5,6 +5,9 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
+#import bcrypt as bc
+from bcrypt import checkpw
+
 #------------------Autenticação firestore
 cred = credentials.Certificate('ezpoint-cd326-firebase-adminsdk-6yfjv-7e14cc16f2.json')
 
@@ -27,13 +30,27 @@ def confirmação():
     sobrenome = sobrenome_input.get()
     atuação = area_box.get()
     senha = senha_input.get()
+    email = email_input.get()
 
-    if primeiro_nome and sobrenome and atuação and senha:
-        tkinter.messagebox.showinfo(title="Confirmado", message="Login concluído!")
+    if primeiro_nome and sobrenome and atuação and senha and email:
+        #tkinter.messagebox.showinfo(title="Confirmado", message="Login concluído!")
       
-        #result = db.collection('Funcionarios').where('email', '==', email).get()
+       doc_ref = db.collection('Funcionarios').where('email', '==', email)
+       docs = list(doc_ref.stream())  # Converter o gerador em uma lista
 
-      #if len(result) and len == 0:
+       if len(docs) == 0:
+              tkinter.messagebox.showwarning(title="Erro", message="Usuário não encontrado!")
+              return
+
+       for doc in docs:
+              hash_senha_firestore = doc.to_dict().get('senha')
+              senha_usuario = senha_input.get()
+
+              if checkpw(senha_usuario.encode('utf-8'), hash_senha_firestore):
+                     tkinter.messagebox.showinfo(title="Sucesso", message="Logado com sucesso!")
+                     return
+              else:
+                     tkinter.messagebox.showwarning(title="Erro", message="Senha ou email incorretos!")
     else:
         tkinter.messagebox.showwarning(title="Erro", message="É necessário completar todos os campos de informações!!")
 
@@ -82,6 +99,30 @@ area = tkinter.Label(infosenha_frame, text="Área em que atua")
 area.grid(row=0, column=2)
 area_box = ttk.Combobox(infosenha_frame,values=[ "", "Produção", "Supervisor", "Produção Química", "Soldador"])
 area_box.grid(row=1, column=2, padx=20, pady=20)
+
+# AREA DE TESTES -------------------------
+
+def bcrypt():
+    email = email_input.get()
+    doc_ref = db.collection('Funcionarios').where('email', '==', email)
+    docs = list(doc_ref.stream())  # Converter o gerador em uma lista
+
+    if len(docs) == 0:
+        tkinter.messagebox.showwarning(title="Erro", message="Usuário não encontrado!")
+        return
+
+    for doc in docs:
+        hash_senha_firestore = doc.to_dict().get('senha')
+        senha_usuario = senha_input.get()
+
+        if checkpw(senha_usuario.encode('utf-8'), hash_senha_firestore):
+            tkinter.messagebox.showinfo(title="Sucesso", message="Logado com sucesso!")
+            return
+        else:
+            tkinter.messagebox.showwarning(title="Erro", message="Senha ou email incorretos!")
+
+    #tkinter.messagebox.showwarning(title="Erro", message="Senha ou email incorretos!")
+
 
 #------------------------------------------------3ª PARTE------------------------------------------------
 
