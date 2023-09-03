@@ -31,9 +31,9 @@ def confirmação():
     if primeiro_nome and sobrenome and atuação and senha:
         tkinter.messagebox.showinfo(title="Confirmado", message="Login concluído!")
       
-        result = db.collection('Funcionarios').where('email', '==', email).get()
+        #result = db.collection('Funcionarios').where('email', '==', email).get()
 
-            if len(result) and len == 0:
+      #if len(result) and len == 0:
     else:
         tkinter.messagebox.showwarning(title="Erro", message="É necessário completar todos os campos de informações!!")
 
@@ -69,12 +69,19 @@ senha.grid(row=0, column=0)
 senha_input = tkinter.Entry(infosenha_frame)
 senha_input.grid(row=1, column=0, padx=20, pady=20)
 
+# INSERIR O EMAIL ---------------------------
+
+email = tkinter.Label(infosenha_frame, text="Email")
+email.grid(row=0, column=1)
+email_input = tkinter.Entry(infosenha_frame)
+email_input.grid(row=1, column=1, padx=20, pady=20)
+
 # INSERIR AREA DE ATUAÇÃO --------------------
 
 area = tkinter.Label(infosenha_frame, text="Área em que atua")
-area.grid(row=0, column=1)
+area.grid(row=0, column=2)
 area_box = ttk.Combobox(infosenha_frame,values=[ "", "Produção", "Supervisor", "Produção Química", "Soldador"])
-area_box.grid(row=1, column=1, padx=20, pady=20)
+area_box.grid(row=1, column=2, padx=20, pady=20)
 
 #------------------------------------------------3ª PARTE------------------------------------------------
 
