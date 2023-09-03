@@ -83,7 +83,7 @@ infosenha_frame.grid(row=2, column=0, padx=20, pady=20)
 
 senha = tkinter.Label(infosenha_frame, text="Senha")
 senha.grid(row=0, column=0)
-senha_input = tkinter.Entry(infosenha_frame)
+senha_input = tkinter.Entry(infosenha_frame, show="*")
 senha_input.grid(row=1, column=0, padx=20, pady=20)
 
 # INSERIR O EMAIL ---------------------------
